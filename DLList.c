@@ -208,16 +208,17 @@ int DLListMoveTo(DLList L, int i)
 // insert an item before current item
 // new item becomes current item
 void DLListBefore(DLList L, char *it)
-{
+{   //printf ("I'm in, Morpheus.\n");
 	 assert(L != NULL); 
     
     DLListNode *new = newDLListNode (it);
     
     if (L->curr == L->first) {
-        //printf ("Got into if-loop.\n");
+        //printf ("1.\n");
         
         // Need case where L is empty.
         if (L->nitems == 0) {
+            //printf ("1a.\n");
             L->curr = new;
             L->first = new;
             L->last = new;
@@ -225,14 +226,16 @@ void DLListBefore(DLList L, char *it)
             new->prev = NULL;
             new->next = NULL;
         
-        // Case where L is non-empty.
-        } else {        
+        } else {
+            //printf ("1b.\n");
             L->curr->prev = new;
-            new->next = L->first;
+            new->next = L->curr;
             new->prev = NULL;
             L->first = new;
             L->curr = new;
-        }    } else {
+        }
+    } else {
+        //printf ("2.\n");
         // if curr == last or curr is an elt in the middle.
         new->next = L->curr;
         new->prev = L->curr->prev;
@@ -281,16 +284,21 @@ void DLListDelete(DLList L)
 {
     assert (L != NULL);
 
-    // if only one node in list
+    // if only one node in list (or zero).
    if ((L->curr == L->first) && (L->curr == L->last)){
-      
+      // printf ("Applying L->curr == L->first == L->last.\n");      
       free(L->curr);
       L->curr = NULL;
       L->first = NULL;
       L->last = NULL;
       
+      // for empty list, because that will end up here too
+      if (L->nitems == 0) {
+         (L->nitems)++; // because decremented at end of function always.
+      }
    
    } else if (L->curr == L->first) {
+      // printf ("Applying L->curr == L->first.\n");
       L->curr->next->prev = NULL;
       L->first = L->curr->next;
       
@@ -301,6 +309,8 @@ void DLListDelete(DLList L)
       L->curr = newCurr;
       
    } else if (L->curr == L->last) {
+      // printf ("Applying L->curr == L->last.\n");
+
       L->curr->prev->next = NULL;
       L->last = L->curr->prev;
       
@@ -312,6 +322,7 @@ void DLListDelete(DLList L)
    
    // curr is somewhere in middle    
    } else {
+      // printf ("None of the above.\n");
       L->curr->next->prev = L->curr->prev;
       L->curr->prev->next = L->curr->next;
       
@@ -336,4 +347,3 @@ int DLListIsEmpty(DLList L)
 {
 	return (L->nitems == 0);
 }
-
