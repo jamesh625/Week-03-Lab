@@ -214,12 +214,25 @@ void DLListBefore(DLList L, char *it)
     DLListNode *new = newDLListNode (it);
     
     if (L->curr == L->first) {
-        L->curr->prev = new;
-        new->next = L->first;
-        new->prev = NULL;
-        L->first = new;
-        L->curr = new;
-    } else {
+        //printf ("Got into if-loop.\n");
+        
+        // Need case where L is empty.
+        if (L->nitems == 0) {
+            L->curr = new;
+            L->first = new;
+            L->last = new;
+            
+            new->prev = NULL;
+            new->next = NULL;
+        
+        // Case where L is non-empty.
+        } else {        
+            L->curr->prev = new;
+            new->next = L->first;
+            new->prev = NULL;
+            L->first = new;
+            L->curr = new;
+        }    } else {
         // if curr == last or curr is an elt in the middle.
         new->next = L->curr;
         new->prev = L->curr->prev;
